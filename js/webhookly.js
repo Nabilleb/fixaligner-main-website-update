@@ -238,22 +238,36 @@ document.addEventListener('DOMContentLoaded', function () {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name, email, phone, date: dateTime, message: constructedMessage.trim() || messageFieldVal || "",
-          wpmessage, sourceUrl, htmlMessage, allFields: allCapturedData
+          name,
+          email,
+          phone,
+          date: dateTime,
+          message: constructedMessage.trim() || messageFieldVal || "",
+          wpmessage,
+          sourceUrl,
+          htmlMessage,
+          allFields: allCapturedData
         }),
       })
         .then(response => {
-          loaderOverlay.style.display = 'none'; // Hide Loader
+          loaderOverlay.style.display = 'none';
+
           if (response.ok) {
-            form.style.display = 'none'; // Optional: Hide form
-            popupOverlay.style.display = 'flex'; // Show Success Popup
+
+            if (typeof fbq !== "undefined") {
+              fbq('track', 'Lead');
+            }
+
+            form.style.display = 'none';
+            popupOverlay.style.display = 'flex';
             form.reset();
+
           } else {
             alert("Something went wrong. Please try again.");
           }
         })
         .catch((error) => {
-          loaderOverlay.style.display = 'none'; // Hide Loader
+          loaderOverlay.style.display = 'none';
           console.error("Webhook error:", error);
           alert("An error occurred. Please check your connection and try again.");
         });
